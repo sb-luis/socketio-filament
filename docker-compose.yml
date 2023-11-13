@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      MONGO_URL: mongodb://root:example@mongo:27017/
+      PASSPORT_SECRET: s0/\/\P4$$w0rD
+      BCRYPT_SALT_ROUNDS: 11
+    volumes:
+      - ./middleware/:/app/middleware
+      - ./models/:/app/models
+      - ./routes/:/app/routes
+      - ./service/:/app/service
+      - ./views/:/app/views
+      - ./package.json/:/app/package.json
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    restart: always
